@@ -1,6 +1,5 @@
 /**
- * POST /api/chat
- * Proxies OpenAI-compatible chat to Groq. Set GROQ_API_KEY in Vercel env.
+ * POST /api/chat — Groq proxy. Env: GROQ_API_KEY, GROQ_MODEL
  */
 export const config = { runtime: 'edge' };
 
@@ -17,7 +16,7 @@ export default async function handler(req) {
   const key = process.env.GROQ_API_KEY;
   if (!key) {
     return json({
-      error: 'GROQ_API_KEY is not set. Add it in Vercel → Project → Settings → Environment Variables.',
+      error: 'GROQ_API_KEY is not set. Add it in Vercel → Settings → Environment Variables.',
     }, 501);
   }
 
@@ -28,7 +27,7 @@ export default async function handler(req) {
     return json({ error: 'Invalid JSON body' }, 400);
   }
 
-  const model = body.model || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+  const model = body.model || process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
   const payload = {
     model,
     messages: body.messages || [],
